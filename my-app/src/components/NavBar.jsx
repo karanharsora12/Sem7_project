@@ -5,6 +5,7 @@ import { UserContext } from '../App'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import image from './images/NE_Preview1.png'
+import { ApiEndPoint } from '../server/ApiEndpoint.constant'
 
 
 function NAvBar() {
@@ -12,67 +13,67 @@ function NAvBar() {
   const navigate = useNavigate()
   const { state, dispatch } = useContext(UserContext)
   // const [finalState,setFinalState]=useState(0)
-  const cookies=Cookies.get('userData')
-  if (cookies!=undefined) {
+  const cookies = Cookies.get('userData')
+  if (cookies != undefined) {
     console.log('pont it');
     dispatch({ type: "USER", payload: true })
     // setFinalState(true)
-  }else{
+  } else {
     dispatch({ type: "USER", payload: false })
     console.log('not getting point')
     // setFinalState(false)
   }
-  let admin=false
-  admin=JSON.parse(localStorage.getItem('admin'))
+  let admin = false
+  admin = JSON.parse(localStorage.getItem('admin'))
   console.log(admin);
-  const MainNavBar=()=>{
-    
-    
+  const MainNavBar = () => {
+
+
 
     if (admin) {
-      return(<li>
-          <a type='button' href='' onClick={() => {
-  
-            navigate('/admin')
-          }} className={style1} aria-current="page">Admin</a>
-        </li>)
-      
-    }else{
-      return(<li>
-          <a type='button' href='' onClick={() => {
-            navigate('/')
-          }} className={style1} aria-current="page">Home</a>
-        </li>)
+      return (<li>
+        <a type='button' href='' onClick={() => {
+
+          navigate('/admin')
+        }} className={style1} aria-current="page">Admin</a>
+      </li>)
+
+    } else {
+      return (<li>
+        <a type='button' href='' onClick={() => {
+          navigate('/')
+        }} className={style1} aria-current="page">Home</a>
+      </li>)
     }
   }
-  
+
   const RenderNavBar = () => {
     if (state) {
       return (
         <>
-          
+
           <li>
-            <button className='btn btn-primary'><a href='' onClick={async() => {
-              
-                const token = Cookies.get('userData')
-                const headers = { 'token': token };
-               const response= await axios.get('http://localhost:3000/logout',{headers}).then((res)=>{
-                    console.log(res)
-                    setTimeout(() => {
-                        toast.success("successfully logout");
-                      }, 200);        
-                    Cookies.remove('userData')
-                    localStorage.removeItem('userData')
-                    localStorage.removeItem('state')
-                    localStorage.removeItem('admin')
-                    dispatch({ type: "USER", payload: false })
-                    // setFinalState(false)
-                    navigate('/login')
-                }).catch((err)=>{
-                    console.log(err)
-                })
-            
-              
+            <button className='btn btn-primary'><a href='' onClick={async () => {
+
+              const token = Cookies.get('userData')
+              const headers = { 'token': token };
+              const response = await axios.get(`${ApiEndPoint}/logout`, { headers }).then((res) => {
+                console.log(res)
+                setTimeout(() => {
+                  toast.success("successfully logout");
+                }, 200);
+                Cookies.remove('userData')
+                localStorage.removeItem('userData')
+                localStorage.removeItem('state')
+                localStorage.removeItem('admin')
+                dispatch({ type: "USER", payload: false })
+                // setFinalState(false)
+                navigate('/login')
+              }).catch((err) => {
+                console.log(err)
+              })
+
+
             }} className={style1}>LogOut</a>
             </button>
           </li>
@@ -82,7 +83,7 @@ function NAvBar() {
     } else {
       return (
         <>
-        
+
 
           <li>
             <a href='' onClick={() => {
@@ -102,7 +103,7 @@ function NAvBar() {
   return (
 
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="#" className="flex items-center">
           <img src={image} className="h-8 mr-3" alt="Flowbite Logo" />
@@ -114,17 +115,17 @@ function NAvBar() {
         </button>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <MainNavBar/>
-          <li>
-            <a href='' onClick={() => {
-              navigate('/about')
-            }} className={style1}>Profile</a>
-          </li> 
-          <li>
-            <a href='' onClick={() => {
-              navigate('/contact')
-            }} className={style1}>ContactUs</a>
-          </li>
+            <MainNavBar />
+            <li>
+              <a href='' onClick={() => {
+                navigate('/about')
+              }} className={style1}>Profile</a>
+            </li>
+            <li>
+              <a href='' onClick={() => {
+                navigate('/contact')
+              }} className={style1}>ContactUs</a>
+            </li>
 
             <RenderNavBar />
           </ul>

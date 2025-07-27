@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from '../App'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant'
 
 function ResetPass() {
     const navigate = useNavigate()
@@ -15,7 +16,7 @@ function ResetPass() {
         password: "",
         cpassword: ""
     })
-    const phone=localStorage.getItem('phone')
+    const phone = localStorage.getItem('phone')
     const [num, changenum] = useState(0)
     const [section, changeSec] = useState('bg-gray-50 dark:bg-gray-900')
     const [mainDiv, changeMain] = useState('w-full bg-white  rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700')
@@ -30,29 +31,29 @@ function ResetPass() {
     }
     const postData = async (e) => {
         e.preventDefault()
-        const response=await axios.put("http://localhost:3000/reset",
-        {
-            phone:phone,
-            password:user.password,
-            cpassword:user.cpassword
-        }).then((res)=>{
-            console.log(res)
-        setTimeout(() => {
-          toast.success("successfully updated password");
-        }, 200);
-        localStorage.removeItem('phone')
-        navigate('/login')
-        }).catch(err=>{
-            console.log(err)
-            setTimeout(() => {
-              toast.error("password error");
-            }, 200);
-        })
+        const response = await axios.put(`${ApiEndPoint}/reset`,
+            {
+                phone: phone,
+                password: user.password,
+                cpassword: user.cpassword
+            }).then((res) => {
+                console.log(res)
+                setTimeout(() => {
+                    toast.success("successfully updated password");
+                }, 200);
+                localStorage.removeItem('phone')
+                navigate('/login')
+            }).catch(err => {
+                console.log(err)
+                setTimeout(() => {
+                    toast.error("password error");
+                }, 200);
+            })
 
     }
     return (
         <section className={section}>
-            <ToastContainer/>
+            <ToastContainer />
             <div className="flex flex-col items-center justify-center px-4 py-6 max-lg:py-14 mx-auto md:h-screen lg:py-0,pt-2">
                 <div className={mainDiv}>
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -73,7 +74,7 @@ function ResetPass() {
                             }} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login</a>
                         </p>
                     </div>
-                    
+
                 </div>
                 <div className='flex'>
 

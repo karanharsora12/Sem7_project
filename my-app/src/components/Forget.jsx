@@ -11,6 +11,7 @@ import { getAuth, RecaptchaVerifier } from "firebase/auth";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { ApiEndPoint } from '../server/ApiEndpoint.constant'
 
 
 const firebaseConfig = {
@@ -44,7 +45,7 @@ function Forget() {
     const [text, changeText] = useState('text-sm font-light text-gray-500 dark:text-gray-300')
     const [input, changeinp] = useState('bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500')
     const [theme, changeTheme] = useState(<WbSunnyIcon />)
-   
+
     const configRecaptcha = () => {
         const auth = getAuth();
         window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
@@ -59,7 +60,7 @@ function Forget() {
     }
     const onSignInSubmit = (e) => {
         e.preventDefault()
-        
+
         configRecaptcha()
         const phoneNumber = "+91" + userData.phone;
         const appVerifier = window.recaptchaVerifier;
@@ -80,19 +81,19 @@ function Forget() {
                 console.log(error)
                 // ...
             });
-       
+
 
 
 
     }
-const postData=async(e)=>{
-    e.preventDefault()
-    const response = await axios.post('http://localhost:3000/verify', userData).then((res)=>{
-        onSignInSubmit(e)
-    }).catch(err=>{
-        console.log(err)
-    })
-}   
+    const postData = async (e) => {
+        e.preventDefault()
+        const response = await axios.post(`${ApiEndPoint}/verify`, userData).then((res) => {
+            onSignInSubmit(e)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     const verifyUser = () => {
         const code = userData.password;
         window.confirmationResult.confirm(code).then((result) => {

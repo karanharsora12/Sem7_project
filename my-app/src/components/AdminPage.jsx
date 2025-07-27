@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 // import state from '../data/StateData.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant';
 
 
 
@@ -43,12 +44,12 @@ function AdminPage() {
   }
   useEffect(() => {
     getAllState()
-  },[])
+  }, [])
   const getAllState = async () => {
     const token = Cookies.get('userData')
     const headers = { 'token': token };
     console.log("headers..", headers);
-    const response = await axios.get('http://localhost:3000/allState', { headers }).then((res) => {
+    const response = await axios.get(`${ApiEndPoint}/allState`, { headers }).then((res) => {
       console.log("res.data.state...", res.data.state);
       setState(res.data.state);
     })
@@ -71,7 +72,7 @@ function AdminPage() {
   }
 
   const selectchange = (e) => {
-    
+
     const name = e.target.name
     const value = e.target.value
     setUser({ ...user, [name]: value })
@@ -89,7 +90,7 @@ function AdminPage() {
     const token = Cookies.get('userData')
     console.log(token);
     const headers = { 'token': token };
-    const response = await axios.post('http://localhost:3000/deleteParty', user2, { headers }).then(res => {
+    const response = await axios.post(`${ApiEndPoint}/deleteParty`, user2, { headers }).then(res => {
       setTimeout(() => {
         toast.success("successfully deleted party");
       }, 200);
@@ -143,7 +144,7 @@ function AdminPage() {
     const token = Cookies.get('userData')
     console.log(token);
     const headers = { 'token': token };
-    const response = await axios.post('http://localhost:3000/addParty', user, { headers }).then(res => {
+    const response = await axios.post(`${ApiEndPoint}/addParty`, user, { headers }).then(res => {
       setTimeout(() => {
         toast.success("successfully Added Party");
       }, 200);

@@ -6,20 +6,21 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Voting from './Voting';
-import FaceDetect,{obj} from './FaceDetect';
+import FaceDetect, { obj } from './FaceDetect';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant';
 
 
 function Home() {
 
-    const [finalState,setFinalState]=useState('')
+    const [finalState, setFinalState] = useState('')
     const [userData, setUserData] = useState({
         voter: '',
-        faceResult:{}
+        faceResult: {}
     });
     const [num, changenum] = useState(0)
     const [section, changeSec] = useState('bg-gray-50 dark:bg-gray-900')
     const [mainDiv, changeMain] = useState('w-full  bg-white  rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700')
-    const [mainVoteDiv,changeMainvoteDiv]=useState('shadow-black grid gap-8 shadow-sm h-auto w-full mx-auto p-8 max-w-screen-md ')
+    const [mainVoteDiv, changeMainvoteDiv] = useState('shadow-black grid gap-8 shadow-sm h-auto w-full mx-auto p-8 max-w-screen-md ')
     const [title, changeTitle] = useState('text-lg font-bold leading-tight tracking-tight text-gray-900 md:text-lg dark:text-white')
     const [text, changeText] = useState('text-sm font-light text-gray-500 dark:text-gray-300')
     const [input, changeinp] = useState('bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500')
@@ -30,14 +31,15 @@ function Home() {
     const handleInputs = (e) => {
         const name = e.target.name
         const value = e.target.value
-        setUserData({ voter:value,
-            faceResult:obj
+        setUserData({
+            voter: value,
+            faceResult: obj
         })
     }
     const checkVoter = async () => {
         const token = Cookies.get('userData')
         const headers = { 'token': token };
-        const response = await axios.get('http://localhost:3000/voter', { headers }).then((res) => {
+        const response = await axios.get(`${ApiEndPoint}/voter`, { headers }).then((res) => {
             document.getElementById('voterId').style.display = 'none'
             document.getElementById('homeMain').style.display = 'block'
         }).catch(err => {
@@ -46,7 +48,7 @@ function Home() {
 
 
         })
-        const response2 = await axios.get('http://localhost:3000/state', { headers }).then((res) => {
+        const response2 = await axios.get(`${ApiEndPoint}/state`, { headers }).then((res) => {
             const { state, isVoted } = res.data
             if (isVoted == true) {
                 document.getElementById('mainDiv').style.display = 'none'
@@ -75,7 +77,7 @@ function Home() {
         if (regex.test(userData.voter)) {
             const token = Cookies.get('userData')
             const headers = { 'token': token };
-            const response = await axios.post('http://localhost:3000/voter', userData, { headers }).then((res) => {
+            const response = await axios.post(`${ApiEndPoint}/voter`, userData, { headers }).then((res) => {
                 setTimeout(() => {
                     toast.success('Voter Id Registered')
                 }, 300)
@@ -102,7 +104,7 @@ function Home() {
                 <div className={mainDiv} id='voterId' style={{
                     display: 'none'
                 }}>
-                    <FaceDetect/>
+                    <FaceDetect />
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className={title}>
                             Enter Your Voter Id associated with your voting card
@@ -120,7 +122,7 @@ function Home() {
                     display: 'block'
                 }}>
                     <Voting finalState={finalState} voteDiv={voteDiv} mainDiv={mainVoteDiv} mainTitle={mainTitle} title={title} />
-                    
+
                 </div>
                 <div id='themeBtn' className='flex' style={{
                     display: 'block'
@@ -157,7 +159,7 @@ function Home() {
                     </button>
                     {/* <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={states}>api</button> */}
                 </div>
-                
+
             </div>
         </section>
     )

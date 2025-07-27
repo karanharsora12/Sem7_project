@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { UserContext } from '../App'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant'
 
 
 function ContactUs() {
@@ -39,7 +40,7 @@ function ContactUs() {
         const token = Cookies.get('userData')
         console.log(token);
         const headers = { 'token': token };
-        const response = await axios.get('http://localhost:3000/about', { headers }).then((res) => {
+        const response = await axios.get(`${ApiEndPoint}/about`, { headers }).then((res) => {
             const userData = res.data
             console.log(userData._id)
             setData({
@@ -67,7 +68,7 @@ function ContactUs() {
         console.log(data);
         const headers = { 'token': token };
         const { name, email, phone, subject, message } = data
-        const response = await axios.post('http://localhost:3000/contact', { name, email, phone, subject, message }, { headers }).then((res) => {
+        const response = await axios.post(`${ApiEndPoint}/contact`, { name, email, phone, subject, message }, { headers }).then((res) => {
             console.log(res.status)
             setTimeout(() => {
                 toast.success("successfully submitted the query");
@@ -94,32 +95,32 @@ function ContactUs() {
                     </div>
                 </div>
                 <div>
-                <form action="#" className="space-y-8">
-                    <div className="grid grid-flow-col gap-4">
-                        <div>
-                            <label htmlFor="name" className={label}>Your Name</label>
-                            <input type="text" id="name" name='name' value={data.name} onChange={handleInputs} className={input} placeholder="Your Name" required />
-                        </div>
-                        <div>
-                            <label htmlFor="email" className={label}>Your email</label>
-                            <input type="email" id="email" name='email' value={data.email} onChange={handleInputs} className={input} placeholder="name@gmail.com" required />
-                        </div>
+                    <form action="#" className="space-y-8">
+                        <div className="grid grid-flow-col gap-4">
+                            <div>
+                                <label htmlFor="name" className={label}>Your Name</label>
+                                <input type="text" id="name" name='name' value={data.name} onChange={handleInputs} className={input} placeholder="Your Name" required />
+                            </div>
+                            <div>
+                                <label htmlFor="email" className={label}>Your email</label>
+                                <input type="email" id="email" name='email' value={data.email} onChange={handleInputs} className={input} placeholder="name@gmail.com" required />
+                            </div>
 
-                        <div>
-                            <label htmlFor="phone" className={label}>Phone No.</label>
-                            <input type="number" id="phone" name='phone' value={data.phone} onChange={handleInputs} className={input} placeholder="Phone No." required />
+                            <div>
+                                <label htmlFor="phone" className={label}>Phone No.</label>
+                                <input type="number" id="phone" name='phone' value={data.phone} onChange={handleInputs} className={input} placeholder="Phone No." required />
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <label htmlFor="subject" className={label}>Subject</label>
-                        <input type="text" id="subject" name="subject" value={data.subject} onChange={handleInputs} className={input} placeholder="Let us know how we can help you" required />
-                    </div>
-                    <div className="sm:col-span-2">
-                        <label htmlFor="message" className={label}>Your message</label>
-                        <textarea id="message" name="message" value={data.message} onChange={handleInputs} rows="6" className={input} placeholder="Leave a comment..."></textarea>
-                    </div>
-                    <button type="submit" onClick={contactUs} className="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-fit hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Send message</button>
-                </form>
+                        <div>
+                            <label htmlFor="subject" className={label}>Subject</label>
+                            <input type="text" id="subject" name="subject" value={data.subject} onChange={handleInputs} className={input} placeholder="Let us know how we can help you" required />
+                        </div>
+                        <div className="sm:col-span-2">
+                            <label htmlFor="message" className={label}>Your message</label>
+                            <textarea id="message" name="message" value={data.message} onChange={handleInputs} rows="6" className={input} placeholder="Leave a comment..."></textarea>
+                        </div>
+                        <button type="submit" onClick={contactUs} className="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-fit hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Send message</button>
+                    </form>
                 </div>
                 <div className='flex justify-end'>
 

@@ -20,6 +20,7 @@ import mnf from './images/mnf.jpg'
 import shs from './images/shs.png'
 import tmc from './images/tmc.png'
 import { useNavigate } from 'react-router-dom';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant';
 
 
 
@@ -34,8 +35,8 @@ function Voting({ voteDiv, mainDiv, mainTitle, title, finalState }) {
     const getState = async () => {
         const token = Cookies.get('userData')
         const headers = { 'token': token };
-        const response = await axios.get('http://localhost:3000/state', { headers }).then((res) => {
-            
+        const response = await axios.get(`${ApiEndPoint}/state`, { headers }).then((res) => {
+
             localStorage.setItem('state', state)
 
 
@@ -44,7 +45,7 @@ function Voting({ voteDiv, mainDiv, mainTitle, title, finalState }) {
     const getAllState = async () => {
         const token = Cookies.get('userData')
         const headers = { 'token': token };
-        const response = await axios.get('http://localhost:3000/allState', { headers }).then((res) => {
+        const response = await axios.get(`${ApiEndPoint}/allState`, { headers }).then((res) => {
             console.log("res.data.state...", res.data.state);
             setState(res.data.state);
         })
@@ -64,38 +65,38 @@ function Voting({ voteDiv, mainDiv, mainTitle, title, finalState }) {
 
         }
     }, [finalState])
-    
+
     console.log(parties)
     const save = async (e) => {
         e.preventDefault()
         const token = Cookies.get('userData')
         const headers = { 'token': token };
-        const response = await axios.post('http://localhost:3000/voted', party, { headers }).then(() => {
+        const response = await axios.post(`${ApiEndPoint}/voted`, party, { headers }).then(() => {
             document.getElementById('mainDiv').style.display = 'none'
             document.getElementById('afterVote').style.display = 'block'
 
             setTimeout(() => {
                 toast.success("Your Vote has been Submitted");
             }, 200);
-            const response = axios.get('http://localhost:3000/state', { headers }).then((res) => {
-        
-            const { state, email, userName, isVoted } = res.data
-            if (isVoted == true) {
-                const mail = async () => {
-                    document.getElementById('mainDiv').style.display = 'none'
-                    document.getElementById('afterVote').style.display = 'block'
-                    const mail = await axios.post('http://localhost:3000/mail',
-                        { state, email, userName }
-                        , { headers }).then(() => {
-                            setTimeout(() => {
-                                toast.success("Confirmation Code has been to your Registered Email Please Check It Out");
-                            }, 200);
-                        })
+            const response = axios.get(`${ApiEndPoint}/state`, { headers }).then((res) => {
+
+                const { state, email, userName, isVoted } = res.data
+                if (isVoted == true) {
+                    const mail = async () => {
+                        document.getElementById('mainDiv').style.display = 'none'
+                        document.getElementById('afterVote').style.display = 'block'
+                        const mail = await axios.post(`${ApiEndPoint}/mail`,
+                            { state, email, userName }
+                            , { headers }).then(() => {
+                                setTimeout(() => {
+                                    toast.success("Confirmation Code has been to your Registered Email Please Check It Out");
+                                }, 200);
+                            })
+                    }
+                    mail()
+
                 }
-                mail()
-                
-            }
-        })
+            })
 
         }).catch(() => {
             setTimeout(() => {
@@ -163,27 +164,27 @@ function Voting({ voteDiv, mainDiv, mainTitle, title, finalState }) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={cpm} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>
-                                }else if(value.id===9){
+                                } else if (value.id === 9) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={tmc} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>
-                                }else if(value.id===10){
+                                } else if (value.id === 10) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={ncc} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>
-                                }else if(value.id===12){
+                                } else if (value.id === 12) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={shs} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>
-                                }else if(value.id===13){
+                                } else if (value.id === 13) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={ncp} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>
-                                }else if(value.id===15){
+                                } else if (value.id === 15) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={mnf} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>
-                                }else if(value.id===16){
+                                } else if (value.id === 16) {
                                     return <div className='flex items-center justify-end'>
                                         <img src={ndpp} alt="" className='h-24 w-28 rounded-lg' />
                                     </div>

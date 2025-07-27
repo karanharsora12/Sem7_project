@@ -7,6 +7,7 @@ import { Button } from '@mui/material'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { ToastContainer, toast } from 'react-toastify';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant'
 
 
 
@@ -47,7 +48,7 @@ function About() {
     const token = Cookies.get('userData')
     console.log(token);
     const headers = { 'token': token };
-    const response = await axios.get('http://localhost:3000/about', { headers }).then((res) => {
+    const response = await axios.get(`${ApiEndPoint}/about`, { headers }).then((res) => {
       const userData = res.data
       setData({
         id: userData._id,
@@ -87,7 +88,7 @@ function About() {
     const token = Cookies.get('userData')
     console.log(token);
     const headers = { 'token': token };
-    const response = await axios.put('http://localhost:3000/about',
+    const response = await axios.put(`${ApiEndPoint}/about`,
       {
         name: data.name,
         email: data.email,
@@ -115,7 +116,7 @@ function About() {
     const token = Cookies.get('userData')
     console.log(token);
     const headers = { 'token': token };
-    const response = await axios.get('http://localhost:3000/about', { headers }).then((res) => {
+    const response = await axios.get(`${ApiEndPoint}/about`, { headers }).then((res) => {
       const userData = res.data
       setData({
         id: userData._id,

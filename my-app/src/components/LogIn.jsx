@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from '../App'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant'
 
 
 
@@ -14,7 +15,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 function LogIn() {
     const { state, dispatch } = useContext(UserContext)
     const navigate = useNavigate()
-    
+
     let userToken;
     const [userData, setUserData] = useState({
         phone: "",
@@ -28,10 +29,10 @@ function LogIn() {
     const [input, changeinp] = useState('bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500')
     const [theme, changeTheme] = useState(<WbSunnyIcon />)
 
-    useEffect(()=>{
-       console.log(localStorage.getItem('state')); 
-       console.log(Cookies.get('userData'));
-    },[])
+    useEffect(() => {
+        console.log(localStorage.getItem('state'));
+        console.log(Cookies.get('userData'));
+    }, [])
     const handleInputs = (e) => {
         const name = e.target.name
         const value = e.target.value
@@ -54,26 +55,26 @@ function LogIn() {
     }
     const postData = async (e) => {
         e.preventDefault()
-        let admin=false
-        const response = await axios.post('http://localhost:3000/login', userData, { headers: { "name": "ved" } }).then((res) => {
+        let admin = false
+        const response = await axios.post(`${ApiEndPoint}/login`, userData, { headers: { "name": "ved" } }).then((res) => {
             console.log(res.data.token)
             userToken = res.data.token
             console.log(res.data);
-            admin=res.data.admin
+            admin = res.data.admin
             setTimeout(() => {
                 toast.success("successfully logged in");
             }, 200);
             Cookies.set("userData", userToken, {
                 expires: new Date(Date.now() + 9999999999),
-            
+
             })
             console.log(Cookies.get("userData"));
             localStorage.setItem('userData', JSON.stringify(userToken))
-            localStorage.setItem('admin',JSON.stringify(admin))
-            if(admin){
-                dispatch({ type: "ADMIN", payload: true})
+            localStorage.setItem('admin', JSON.stringify(admin))
+            if (admin) {
+                dispatch({ type: "ADMIN", payload: true })
                 navigate('/admin')
-            }else{
+            } else {
                 dispatch({ type: "USER", payload: true })
                 navigate('/')
             }
@@ -86,7 +87,7 @@ function LogIn() {
             }, 200);
 
         })
-        
+
     }
 
 

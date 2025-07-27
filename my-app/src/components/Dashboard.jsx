@@ -23,8 +23,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { ApiEndPoint } from '../server/ApiEndpoint.constant';
 
-function createData(key,Id,partyName,vote) {
+function createData(key, Id, partyName, vote) {
   return {
     Id,
     partyName,
@@ -33,7 +34,7 @@ function createData(key,Id,partyName,vote) {
 }
 
 // let rows = [
-  
+
 // ];
 
 
@@ -76,21 +77,21 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'ID',
-    left:true
+    left: true
   },
   {
     id: 'partyName',
     numeric: false,
     disablePadding: false,
     label: 'Party Name',
-    center:true
+    center: true
   },
   {
     id: 'vote',
     numeric: true,
     disablePadding: false,
     label: 'Votes',
-    right:true
+    right: true
   },
 ];
 
@@ -107,7 +108,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.left?'left':headCell.center?'center':'right'}
+            align={headCell.left ? 'left' : headCell.center ? 'center' : 'right'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -195,10 +196,10 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable() {
-  const [rows,setRows]=React.useState([
+  const [rows, setRows] = React.useState([
   ])
-  const [parties,setparties]=React.useState([])
-  const [format,setFormat]=React.useState([])
+  const [parties, setparties] = React.useState([])
+  const [format, setFormat] = React.useState([])
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -206,42 +207,42 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [topic, changeTitle] = React.useState("mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white")
-   
-  
-  const getData=async()=>{
+
+
+  const getData = async () => {
     const token = Cookies.get('userData')
     const headers = { 'token': token };
-    const response=await axios.get('http://localhost:3000/parties', { headers }).then((res) => {
+    const response = await axios.get(`${ApiEndPoint}/parties`, { headers }).then((res) => {
       // console.log(res.data);
 
-      if (parties.length===0) {
-        
+      if (parties.length === 0) {
+
         setparties(res.data)
       }
-      
-         
-      
+
+
+
 
     })
   }
-  React.useEffect(()=>{
+  React.useEffect(() => {
     getData()
-  },[])
-  
-  React.useEffect(()=>{
-    console.log(parties);
-    let data=[]
+  }, [])
 
-    parties.map(value=>{
-      data.push(createData(value.Id,value.Id,value.partyName,value.vote))
-      
+  React.useEffect(() => {
+    console.log(parties);
+    let data = []
+
+    parties.map(value => {
+      data.push(createData(value.Id, value.Id, value.partyName, value.vote))
+
     })
     setRows(data)
-  },[parties])
-  
-  
-  
-  
+  }, [parties])
+
+
+
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -296,108 +297,108 @@ export default function EnhancedTable() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-    
-      
-    
-    const visibleRows = React.useMemo(
+
+
+
+  const visibleRows = React.useMemo(
     () =>
-    
-        stableSort(rows, getComparator(order, orderBy)).slice(
-          page * rowsPerPage,
-          page * rowsPerPage + rowsPerPage,
-        ),
-      [order, orderBy, page, rowsPerPage,rows],
-    
-      
-      );
-      console.log(visibleRows)
-      
+
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      ),
+    [order, orderBy, page, rowsPerPage, rows],
+
+
+  );
+  console.log(visibleRows)
+
   return (
     <>
-               
-    <Box sx={{ width: '100%' }}>
-    
-    {/* <h2 className={topic}>Contact Us</h2> */}
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody >
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.name);
-                const labelId = `enhanced-table-checkbox-${index}`;
-                
-                return (
+
+      <Box sx={{ width: '100%' }}>
+
+        {/* <h2 className={topic}>Contact Us</h2> */}
+        <Paper sx={{ width: '100%', mb: 2 }}>
+          <EnhancedTableToolbar numSelected={selected.length} />
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={dense ? 'small' : 'medium'}
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody >
+                {visibleRows.map((row, index) => {
+                  const isItemSelected = isSelected(row.name);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.name)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.name}
+                      selected={isItemSelected}
+                      sx={{ cursor: 'pointer' }}
+                    >
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        align='left'
+                      >
+                        {row.Id}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        align='center'
+                      >
+                        {row.partyName}
+                      </TableCell>
+                      <TableCell align="right">{row.vote}</TableCell>
+
+                    </TableRow>
+                  );
+                })}
+                {emptyRows > 0 && (
                   <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.name)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.name}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
                   >
-                     <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      align='left'
-                    >
-                      {row.Id}
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      align='center'
-                    >
-                      {row.partyName}
-                    </TableCell>
-                    <TableCell align="right">{row.vote}</TableCell>
-                    
+                    <TableCell colSpan={6} />
                   </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </Box>
+      </Box>
     </>
   );
 }
