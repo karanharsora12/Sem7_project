@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 // import state from '../data/StateData.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant';
+import { ApiEndPoint } from '../server/ApiEndPoint.constant';
 
 
 

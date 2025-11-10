@@ -7,7 +7,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Voting from './Voting';
 import FaceDetect, { obj } from './FaceDetect';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant';
+import { ApiEndPoint } from '../server/ApiEndPoint.constant';
 
 
 function Home() {

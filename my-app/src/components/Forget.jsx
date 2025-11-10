@@ -11,7 +11,7 @@ import { getAuth, RecaptchaVerifier } from "firebase/auth";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { ApiEndPoint } from '../server/ApiEndpoint.constant'
+import { ApiEndPoint } from '../server/ApiEndPoint.constant'
 
 
 const firebaseConfig = {

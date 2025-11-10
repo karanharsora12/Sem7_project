@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from '../App'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant'
+import { ApiEndPoint } from '../server/ApiEndPoint.constant'
 
 function ResetPass() {
     const navigate = useNavigate()

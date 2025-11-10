@@ -5,7 +5,7 @@ import { UserContext } from '../App'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import image from './images/NE_Preview1.png'
-import { ApiEndPoint } from '../server/ApiEndpoint.constant'
+import { ApiEndPoint } from '../server/ApiEndPoint.constant'
 
 
 function NAvBar() {

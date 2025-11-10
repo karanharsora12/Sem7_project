@@ -23,7 +23,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant';
+import { ApiEndPoint } from '../server/ApiEndPoint.constant';
 
 function createData(key, Id, partyName, vote) {
   return {

@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { state } from '../data/State';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant';
+import { ApiEndPoint } from '../server/ApiEndPoint.constant';
 
 function SignUp() {
     const navigate = useNavigate()

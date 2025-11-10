@@ -20,7 +20,7 @@ import mnf from './images/mnf.jpg'
 import shs from './images/shs.png'
 import tmc from './images/tmc.png'
 import { useNavigate } from 'react-router-dom';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant';
+import { ApiEndPoint } from '../server/ApiEndPoint.constant';
 
 
 

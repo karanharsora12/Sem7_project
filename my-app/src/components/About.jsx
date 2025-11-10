@@ -7,7 +7,7 @@ import { Button } from '@mui/material'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { ToastContainer, toast } from 'react-toastify';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { ApiEndPoint } from '../server/ApiEndpoint.constant'
+import { ApiEndPoint } from '../server/ApiEndPoint.constant'
 
 
 
