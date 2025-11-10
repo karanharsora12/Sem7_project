@@ -4,7 +4,7 @@ const app=express()
 const dotenv=require('dotenv')
 const cors=require('cors')
 const cookieParser=require('cookie-parser')
-dotenv.config({path:'./config.env'})
+dotenv.config();
 const bodyparser=require('body-parser')
 app.use(bodyparser.json())
 
@@ -18,6 +18,6 @@ app.use(cors({
 }))
 app.use(require('./router/auth')) //main file
 
-app.listen(port,()=>{
-    console.log(`server is listening ${port}`);
+app.listen(8000,()=>{
+    console.log(`server is listening ${8000}`);
 })

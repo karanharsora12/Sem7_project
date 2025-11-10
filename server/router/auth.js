@@ -10,6 +10,24 @@ const User = require('../model/userSchema')
 const Party = require('../model/partySchema')
 const authenticate = require('../middleware/authenticate')
 
+// In-memory OTP storage (email -> {otp, expiresAt, userData})
+const otpStore = new Map()
+
+// Generate 6-digit OTP
+const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+// Clean expired OTPs
+setInterval(() => {
+    const now = Date.now()
+    for (const [email, data] of otpStore.entries()) {
+        if (data.expiresAt < now) {
+            otpStore.delete(email)
+        }
+    }
+}, 60000) // Clean every minute
+
 let commonPath = path.resolve();
 let stateDataPath = path.join(commonPath, "/data/StateData.json");
 const data = require(stateDataPath)
@@ -54,6 +72,134 @@ router.post('/regi', async (req, res) => {
 
 })
 
+// Send OTP endpoint
+router.post("/send-otp", async (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (!email || !password) {
+            return res.status(422).json({ error: "Please fill all fields" })
+        }
+
+        const userSignIn = await User.findOne({ email: email })
+        if (!userSignIn) {
+            return res.status(404).json({ error: "Invalid Credentials" })
+        }
+
+        const isMatch = await bcrypt.compare(password, userSignIn.password)
+        if (!isMatch) {
+            return res.status(404).json({ error: "Invalid Credentials" })
+        }
+
+        // Generate OTP
+        const otp = generateOTP()
+        const expiresAt = Date.now() + 5 * 60 * 1000 // 5 minutes
+
+        // Store OTP with user data
+        otpStore.set(email.toLowerCase(), {
+            otp,
+            expiresAt,
+            userId: userSignIn._id,
+            email: userSignIn.email,
+            name: userSignIn.name
+        })
+
+        // Send OTP via email
+        try {
+            var transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                service: 'gmail',
+                port: 587,
+                secure: false,
+                requireTLS: true,
+                auth: {
+                    user: 'vaishali@gmail.com',
+                    pass: '9725773100'
+                }
+            })
+
+            var mail = {
+                from: "vedantkhamar975@gmail.com",
+                to: email,
+                subject: "Login OTP Verification",
+                html: `<h1>Hello ${userSignIn.name}</h1><br>
+                <h2>Your OTP for login is: <b>${otp}</b></h2>
+                <p>This OTP will expire in 5 minutes.</p>
+                <p>If you didn't request this OTP, please ignore this email.</p>`
+            }
+
+            transporter.sendMail(mail, function (err, info) {
+                if (err) {
+                    console.log("Email error", err)
+                    otpStore.delete(email.toLowerCase())
+                    return res.status(500).json({ error: "Failed to send OTP" })
+                } else {
+                    return res.status(200).json({ message: "OTP sent to your email" })
+                }
+            })
+        } catch (emailErr) {
+            console.log(emailErr)
+            otpStore.delete(email.toLowerCase())
+            return res.status(500).json({ error: "Failed to send OTP" })
+        }
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ error: "Internal server error" })
+    }
+})
+
+// Verify OTP and complete login
+router.post("/verify-otp", async (req, res) => {
+    try {
+        const { email, otp } = req.body
+        if (!email || !otp) {
+            return res.status(422).json({ error: "Please fill all fields" })
+        }
+
+        const storedData = otpStore.get(email.toLowerCase())
+        if (!storedData) {
+            return res.status(404).json({ error: "OTP expired or not found. Please request a new OTP." })
+        }
+
+        if (Date.now() > storedData.expiresAt) {
+            otpStore.delete(email.toLowerCase())
+            return res.status(404).json({ error: "OTP expired. Please request a new OTP." })
+        }
+
+        if (storedData.otp !== otp) {
+            return res.status(404).json({ error: "Invalid OTP" })
+        }
+
+        // OTP verified, complete login
+        const userSignIn = await User.findById(storedData.userId)
+        if (!userSignIn) {
+            otpStore.delete(email.toLowerCase())
+            return res.status(404).json({ error: "User not found" })
+        }
+
+        const token = await userSignIn.generateToken()
+        res.cookie("userData", token, {
+            expires: new Date(Date.now() + 999999999),
+            httpOnly: true
+        })
+
+        // Remove OTP from store
+        otpStore.delete(email.toLowerCase())
+
+        let admin = userSignIn.isAdmin
+        return res.status(200).json({ 
+            message: "Login successful", 
+            token: token, 
+            admin: admin 
+        })
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ error: "Internal server error" })
+    }
+})
+
+// Keep old login endpoint for backward compatibility (optional - can be removed)
 router.post("/login", async (req, res) => {
     try {
         const { phone, password } = req.body
